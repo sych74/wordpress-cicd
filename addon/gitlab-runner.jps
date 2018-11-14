@@ -8,17 +8,17 @@ baseUrl: https://raw.githubusercontent.com/sych74/wordpress-cicd/master
 
 settings:
   fields:
-  - name: gitlab_host
-    caption: GITLAB_HOST
-    type: string
-    default: example.com
-    required: 'true'
+    - name: gitlab_host
+      caption: GITLAB_HOST
+      type: string
+      default: example.com
+      required: 'true'
 
-   - name: gitlab_ci_token
-    caption: GITLAB_CI_TOKEN
-    type: string
-    default: ""
-    required: 'true'
+    - name: gitlab_ci_token
+      caption: GITLAB_CI_TOKEN
+      type: string
+      default: ""
+      required: 'true'
  
 onInstall:
   - cmd[${nodes.cp.master.id}]: |-
