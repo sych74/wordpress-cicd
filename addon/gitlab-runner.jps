@@ -28,3 +28,5 @@ onInstall:
       wget ${baseUrl}/scripts/gitlab-runner.service -O /etc/systemd/system/gitlab-runner.service
       service gitlab-runner restart
     user: root
+    
+    
