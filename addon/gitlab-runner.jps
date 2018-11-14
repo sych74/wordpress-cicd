@@ -27,5 +27,6 @@ onInstall:
       wget ${baseUrl}/configs/config.toml -O /etc/gitlab-runner/config.toml
       sed -i "s/_GITLAB_HOST_/${settings.gitlab_host}/g" /etc/gitlab-runner/config.toml
       sed -i "s/_TOKEN_/${settings.gitlab_ci_token}/g" /etc/gitlab-runner/config.toml
+      wget ${baseUrl}/scripts/gitlab-runner.service -O /etc/systemd/system/gitlab-runner.service
       service gitlab-runner restart
     user: root
