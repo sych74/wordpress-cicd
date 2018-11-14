@@ -4,11 +4,28 @@ jpsVersion: '1.1'
 name: Additional packages
 description: Multisites addon for Wordpress cluster
 logo: https://raw.githubusercontent.com/jelastic-jps/wordpress-cluster/master/images/wp-cluster.png
-baseUrl: https://raw.githubusercontent.com/jelastic-jps/wordpress-cluster/master
+baseUrl: https://raw.githubusercontent.com/sych74/wordpress-cicd/master
 
+settings:
+  fields:
+  - name: gitlab_host
+    caption: GITLAB_HOST
+    type: string
+    default: example.com
+    required: 'true'
+
+   - name: gitlab_ci_token
+    caption: GITLAB_CI_TOKEN
+    type: string
+    default: ""
+    required: 'true'
+ 
 onInstall:
   - cmd[${nodes.cp.master.id}]: |-
       curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | sudo bash
       yum install gitlab-runner -y
-      
+      wget ${baseUrl}/configs/config.toml -O /etc/gitlab-runner/config.toml
+      sed -i "s/_GITLAB_HOST_/${settings.gitlab_host}/g" /etc/gitlab-runner/config.toml
+      sed -i "s/_TOKEN_/${settings.gitlab_ci_token}/g" /etc/gitlab-runner/config.toml
+      service gitlab-runner restart
     user: root
