@@ -1,1 +1,56 @@
-test
+stages:
+    - deploy_to_test
+    - deploy_to_stage
+    - deploy_to_prod-demo
+    - deploy_to_prod-whelastic
+
+deploy_to_test:
+  stage: deploy_to_test
+  script:
+    - cd /data/ROOT
+    - git fetch
+    - git reset --hard
+    - git pull
+    - git checkout $CI_BUILD_REF_NAME
+    - git pull origin $CI_BUILD_REF_NAME
+    - cat wp-content/uploads/revisr-backups/*.sql | mysql -u${DB_MYSQL_USER} -p${DB_MYSQL_PASSWORD} -h${DB_DB_MASTER} ${DB_MYSQL_DATABASE}
+  when: manual
+  tags: 
+    - test-site.jelastic.com
+
+
+deploy_to_stage:
+  stage: deploy_to_stage
+  script:
+    - echo $CI_BUILD_REF > /tmp/update
+    - bash site-update.sh $CI_BUILD_REF
+    - bash /data/ROOT/sitemap-update.sh
+  when: manual
+  only:
+    - master
+  tags: 
+    - stage-site.jelastic.com
+
+
+deploy_to_prod-demo:
+  stage: deploy_to_prod-demo
+  script:
+    - echo $CI_BUILD_REF > /tmp/update
+    - bash site-update.sh $CI_BUILD_REF
+    - bash /data/ROOT/sitemap-update.sh
+  when: manual
+  only:
+    - master
+  tags: 
+    - jelsite-prod.demo.jelastic.com
+    
+deploy_to_prod-whelastic:
+  stage: deploy_to_prod-whelastic
+  script:
+    - bash sitemap-update.sh  
+  when: manual
+  only:
+    - master
+  tags:
+    - jelsite-prod.whelastic.net
+
